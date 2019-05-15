@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# install --- Create a link to the nvim directory
+# Configure the init.vim file to reuse an existing vim configuration.
+# See: http://vimcasts.org/episodes/meet-neovim/
+
+# Mike Barker <mike@thebarkers.com>
+# May 30th, 2018
+
+# 2018.05.30 MRB
+# - Initial version
+
+
+# Create a symbolic link, backing up any files that exist
+link() {
+    local src=$1
+    local dst=$2
+    if [ -a ${dst} ]; then
+        if ! [ -h ${dst} ]; then
+            echo "Backing up ${dst} to ${dst}.backup"
+            mv ${dst} ${dst}.backup
+        fi
+    fi
+    if ! [ -a ${dst} ]; then
+        echo "Linking file ${dst}"
+        ln -sfnv ${src} ${dst}
+    fi
+}
+
+# Get the current working directory
+CWD="$(cd "$(dirname "$0")" && pwd)"
+
+# Link the vim configuration files and dir
+link ${CWD}/nvim ${HOME}/.config/nvim
